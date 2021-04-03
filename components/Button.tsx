@@ -3,8 +3,10 @@ import styled from 'styled-components';
 
 interface ButtonProps {
   children: ReactNode,
+  onClick: () => void;
   color?: "grey" | "blue" | "red" | "white";
   disabled?: boolean;
+  preventDefault?: boolean;
   type?: "button" | "reset" | "submit";
 }
 
@@ -32,7 +34,11 @@ const colorMap = {
   },
 }
 
-export default function Button({ children, color, disabled, type }: ButtonProps): JSX.Element {
+export default function Button({ children, color, disabled, onClick, preventDefault, type }: ButtonProps): JSX.Element {
   const buttonColor = color || "white";
-  return <ButtonStyled type={type || "button"} {...colorMap[buttonColor]} disabled={disabled}>{children}</ButtonStyled>;
+  const handleClick = (e: React.MouseEvent) => {
+    preventDefault && e.preventDefault();
+    onClick();
+  }
+  return <ButtonStyled type={type || "button"} onClick={handleClick} {...colorMap[buttonColor]} disabled={disabled}>{children}</ButtonStyled>;
 }
