@@ -1,13 +1,17 @@
-import React from 'react';
-import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
-import Image from 'next/image'
-import { useRouter } from 'next/dist/client/router';
-import { ParsedUrlQuery } from 'querystring';
-import styled from 'styled-components';
-import Card from '../../components/Card';
-import Layout from '../../components/Layout';
-import EventData from '../../lib/types/Event';
-import getTable from '../../lib/utils/getTable';
+import React from "react";
+import {
+  GetStaticPathsResult,
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+} from "next";
+import Image from "next/image";
+import { useRouter } from "next/dist/client/router";
+import { ParsedUrlQuery } from "querystring";
+import styled from "styled-components";
+import Card from "../../components/Card";
+import Layout from "../../components/Layout";
+import EventData from "../../lib/types/Event";
+import getTable from "../../lib/utils/getTable";
 
 const EventInfo = styled.div`
   display: flex;
@@ -29,7 +33,12 @@ const EventDetailsCard = styled(Card)`
   padding: 4rem 8rem;
 `;
 
-const LabeledElement = ({ children, label }) => (
+type LabeledElementProps = {
+  children?: React.ReactNode;
+  label: string;
+};
+
+const LabeledElement = ({ children, label }: LabeledElementProps) => (
   <InfoSection>
     <Label>{label}</Label>
     <div>{children}</div>
@@ -38,10 +47,10 @@ const LabeledElement = ({ children, label }) => (
 
 type EventPageProps = {
   event: EventData;
-}
+};
 
 export default function Event({ event }: EventPageProps): JSX.Element {
-  const router = useRouter()
+  const router = useRouter();
 
   // If the page is not yet generated, this will be displayed
   // initially until getStaticProps() finishes running
@@ -67,12 +76,14 @@ export default function Event({ event }: EventPageProps): JSX.Element {
     <Layout>
       <EventInfo>
         <EventDetailsCard title={event.name}>
-          <LabeledElement label="Date">{date.toLocaleDateString()}</LabeledElement>
+          <LabeledElement label="Date">
+            {date.toLocaleDateString()}
+          </LabeledElement>
           <LabeledElement label="Time">
-              {date.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
+            {date.toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </LabeledElement>
           <LabeledElement label="Where">{event.meetingLocation}</LabeledElement>
           <LabeledElement label="Volunteers">
@@ -81,26 +92,35 @@ export default function Event({ event }: EventPageProps): JSX.Element {
             ))}
           </LabeledElement>
         </EventDetailsCard>
-        <Image src="/meetup_location.png" alt="Coordinates: 36.0199722,-78.9075955" width={720} height={600}/>
+        <Image
+          src="/meetup_location.png"
+          alt="Coordinates: 36.0199722,-78.9075955"
+          width={720}
+          height={600}
+        />
       </EventInfo>
     </Layout>
-  )
+  );
 }
 
 interface Params extends ParsedUrlQuery {
-  id: string,
+  id: string;
 }
 
-export async function getStaticProps({ params }: GetStaticPropsContext<Params>): Promise<GetStaticPropsResult<EventPageProps>> {
+export async function getStaticProps({
+  params,
+}: GetStaticPropsContext<Params>): Promise<
+  GetStaticPropsResult<EventPageProps>
+> {
   let event: EventData = null;
   try {
-    const eventRecord = await getTable('Events').find(params.id);
+    const eventRecord = await getTable("Events").find(params.id);
     event = {
       id: eventRecord.id,
-      name: eventRecord.get('Name'),
-      datetime: eventRecord.get('Datetime'),
-      meetingLocation: eventRecord.get('Meeting Location'),
-      volunteers: eventRecord.get('Name (from Volunteers)') || [],
+      name: eventRecord.get("Name"),
+      datetime: eventRecord.get("Datetime"),
+      meetingLocation: eventRecord.get("Meeting Location"),
+      volunteers: eventRecord.get("Name (from Volunteers)") || [],
     };
   } catch (e) {
     console.error(e);

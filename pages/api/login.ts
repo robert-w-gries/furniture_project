@@ -1,8 +1,11 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import Magic from '../../lib/auth/magic';
-import { createSession } from '../../lib/auth/session';
+import { NextApiRequest, NextApiResponse } from "next";
+import Magic from "../../lib/auth/magic";
+import { createSession } from "../../lib/auth/session";
 
-export default async function login(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+export default async function login(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> {
   try {
     const didToken = req.headers.authorization.substr(7);
     const metadata = await Magic.users.getMetadataByToken(didToken);

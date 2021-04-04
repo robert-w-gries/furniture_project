@@ -1,4 +1,4 @@
-export type EventStatus = 'Past Event' | 'In Progress' | 'Upcoming Event';
+export type EventStatus = "Past Event" | "In Progress" | "Upcoming Event";
 
 export default interface EventData {
   id: string;

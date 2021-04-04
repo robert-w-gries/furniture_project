@@ -1,8 +1,8 @@
-import React from 'react';
-import Head from 'next/head'
-import Link from 'next/link';
-import { ReactNode } from 'react';
-import styled from 'styled-components';
+import React from "react";
+import Head from "next/head";
+import Link from "next/link";
+import { ReactNode } from "react";
+import styled from "styled-components";
 
 const RootContainer = styled.div`
   min-height: 100vh;
@@ -28,7 +28,7 @@ const MainContainer = styled.main`
 
 const MainContent = styled.div`
   max-width: 1200px;
-`
+`;
 
 const Footer = styled.footer`
   width: 100%;
@@ -37,7 +37,7 @@ const Footer = styled.footer`
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   & img {
     height: 1rem;
   }
@@ -48,11 +48,14 @@ const HomeLink = styled.a`
 `;
 
 type LayoutProps = {
-  children: ReactNode,
-  useFullWidth?: boolean,
+  children: ReactNode;
+  useFullWidth?: boolean;
 };
 
-export default function Layout({ children, useFullWidth }: LayoutProps): JSX.Element {
+export default function Layout({
+  children,
+  useFullWidth,
+}: LayoutProps): JSX.Element {
   return (
     <RootContainer>
       <Head>
@@ -69,8 +72,6 @@ export default function Layout({ children, useFullWidth }: LayoutProps): JSX.Ele
       <MainContainer>
         {useFullWidth ? children : <MainContent>{children}</MainContent>}
       </MainContainer>
-
-      {false ? <Footer /> : null}
     </RootContainer>
   );
 }

@@ -1,8 +1,8 @@
-import React, { ReactNode } from 'react';
-import styled from 'styled-components';
+import React, { ReactNode } from "react";
+import styled from "styled-components";
 
 interface ButtonProps {
-  children: ReactNode,
+  children: ReactNode;
   onClick: () => void;
   color?: "grey" | "blue" | "red" | "white";
   disabled?: boolean;
@@ -11,34 +11,50 @@ interface ButtonProps {
 }
 
 const ButtonStyled = styled.button`
-  color: ${props => props.color};
-  background-color: ${props => props['background-color']};
+  color: ${(props) => props.color};
+  background-color: ${(props) => props["background-color"]};
 `;
 
 const colorMap = {
   blue: {
     color: "white",
-    'background-color': "blue",
+    "background-color": "blue",
   },
   grey: {
     color: "white",
-    'background-color': "dark-grey",
+    "background-color": "dark-grey",
   },
   red: {
     color: "white",
-    'background-color': "red",
+    "background-color": "red",
   },
   white: {
     color: "black",
-    'background-color': "white",
+    "background-color": "white",
   },
-}
+};
 
-export default function Button({ children, color, disabled, onClick, preventDefault, type }: ButtonProps): JSX.Element {
+export default function Button({
+  children,
+  color,
+  disabled,
+  onClick,
+  preventDefault,
+  type,
+}: ButtonProps): JSX.Element {
   const buttonColor = color || "white";
   const handleClick = (e: React.MouseEvent) => {
     preventDefault && e.preventDefault();
     onClick();
-  }
-  return <ButtonStyled type={type || "button"} onClick={handleClick} {...colorMap[buttonColor]} disabled={disabled}>{children}</ButtonStyled>;
+  };
+  return (
+    <ButtonStyled
+      type={type || "button"}
+      onClick={handleClick}
+      {...colorMap[buttonColor]}
+      disabled={disabled}
+    >
+      {children}
+    </ButtonStyled>
+  );
 }

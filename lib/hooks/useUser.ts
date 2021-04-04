@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useSWR from "swr";
 import { User } from "../types/User";
@@ -8,7 +8,9 @@ type ResponseData = {
 };
 
 const fetchUser = async (url: string): Promise<ResponseData> => {
-  return fetch(url).then((response) => response.json()).then((data: ResponseData) => data || { user: null });
+  return fetch(url)
+    .then((response) => response.json())
+    .then((data: ResponseData) => data || { user: null });
 };
 
 interface UserHookProps {
@@ -16,20 +18,23 @@ interface UserHookProps {
   redirectIfFound?: boolean;
 }
 
-export default function useUser({ redirectTo, redirectIfFound }: UserHookProps): User {
+export default function useUser({
+  redirectTo,
+  redirectIfFound,
+}: UserHookProps): User {
   const router = useRouter();
-  const { data, error } = useSWR('/api/user', fetchUser);
-  //console.log(data);
+  const { data, error } = useSWR("/api/user", fetchUser);
   const user = data?.user || null;
   const finished = Boolean(data);
   const hasUser = Boolean(user);
-  const shouldRedirect = Boolean(redirectTo) && Boolean(redirectIfFound) === hasUser;
+  const shouldRedirect =
+    Boolean(redirectTo) && Boolean(redirectIfFound) === hasUser;
 
   useEffect(() => {
     if (finished && shouldRedirect) {
-      router.push(redirectTo)
+      router.push(redirectTo);
     }
-  }, [redirectTo, shouldRedirect, finished, hasUser])
+  }, [redirectTo, shouldRedirect, finished, router]);
 
   return error ? null : user;
 }

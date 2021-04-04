@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const CardStyle = styled.div`
   margin: 1rem;
@@ -35,7 +35,7 @@ type CardProps = {
   className?: string;
   title: string;
   children: ReactNode;
-}
+};
 export default function Card({ className, title, children }: CardProps) {
   return (
     <CardStyle className={className}>
@@ -43,4 +43,4 @@ export default function Card({ className, title, children }: CardProps) {
       {children}
     </CardStyle>
   );
-};
+}
