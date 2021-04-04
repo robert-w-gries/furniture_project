@@ -75,7 +75,8 @@ export default function Event({ event }: EventPageProps): JSX.Element {
   return (
     <Layout>
       <EventInfo>
-        <EventDetailsCard title={event.name}>
+        <EventDetailsCard>
+          <h2>{event.name}</h2>
           <LabeledElement label="Date">
             {date.toLocaleDateString()}
           </LabeledElement>
@@ -85,7 +86,6 @@ export default function Event({ event }: EventPageProps): JSX.Element {
               minute: "2-digit",
             })}
           </LabeledElement>
-          <LabeledElement label="Where">{event.meetingLocation}</LabeledElement>
           <LabeledElement label="Volunteers">
             {event.volunteers.map((volunteer) => (
               <div key={volunteer}>{volunteer}</div>
@@ -119,7 +119,6 @@ export async function getStaticProps({
       id: eventRecord.id,
       name: eventRecord.get("Name"),
       datetime: eventRecord.get("Datetime"),
-      meetingLocation: eventRecord.get("Meeting Location"),
       volunteers: eventRecord.get("Name (from Volunteers)") || [],
     };
   } catch (e) {

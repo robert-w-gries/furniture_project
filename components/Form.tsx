@@ -1,5 +1,15 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import Button from "../components/Button";
+
+const FormFlex = styled.form`
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  & div {
+    margin-bottom: 12px;
+  }
+`;
 
 type FormProps = {
   onSubmit: (value: string) => void;
@@ -11,19 +21,23 @@ const Form = ({ onSubmit, label, submitText }: FormProps): JSX.Element => {
   const [value, setValue] = useState("");
 
   return (
-    <form>
+    <FormFlex>
       <label>
-        {label ? `${label}:` : null}
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
+        {label ? `${label}` : null}
+        <div>
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          />
+        </div>
       </label>
-      <Button onClick={() => onSubmit(value)} preventDefault>
-        {submitText || "Submit"}
-      </Button>
-    </form>
+      <div>
+        <Button onClick={() => onSubmit(value)} preventDefault>
+          {submitText || "Submit"}
+        </Button>
+      </div>
+    </FormFlex>
   );
 };
 

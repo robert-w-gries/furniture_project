@@ -21,7 +21,7 @@ interface UserHookProps {
 export default function useUser({
   redirectTo,
   redirectIfFound,
-}: UserHookProps): User {
+}: UserHookProps): [User, boolean] {
   const router = useRouter();
   const { data, error } = useSWR("/api/user", fetchUser);
   const user = data?.user || null;
@@ -36,5 +36,5 @@ export default function useUser({
     }
   }, [redirectTo, shouldRedirect, finished, router]);
 
-  return error ? null : user;
+  return [error ? null : user, !finished];
 }

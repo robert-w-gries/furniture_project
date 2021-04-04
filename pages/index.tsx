@@ -7,21 +7,27 @@ import EventData from "../lib/types/Event";
 import getTable from "../lib/utils/getTable";
 import { GetStaticPropsResult } from "next";
 
-const VOLUNTEER_SIGN_UP_LINK = "https://airtable.com/shrCXvV11fqdUZSYz";
+const VOLUNTEER_SIGN_UP_LINK = "https://airtable.com/shrdNGOki2dxxU6zy";
 
-const Grid = styled.div`
+const EventList = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
-  width: 100%;
+  flex-flow: wrap;
+  justify-content: space-between;
+
+  & > *:not(:last-child) {
+    margin-right: 20px;
+  }
 
   @media (max-width: 600px) {
-    flex-direction: column;
+    flex-flow: column;
+    & > * {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
   }
 `;
 
-const BaseLink = styled.a`
+const LinkWrapper = styled.a`
   &:hover,
   &:focus,
   &:active {
@@ -31,12 +37,18 @@ const BaseLink = styled.a`
   }
 `;
 
-const LinkButton = styled(BaseLink)`
+const LinkButton = styled(LinkWrapper)`
   font-size: 1.25rem;
   border: 1px solid black;
   padding: 14px 24px;
   border-radius: 5px;
   text-align: center;
+`;
+
+const EventCardStyled = styled(Card)`
+  width: 200px;
+  padding: 20px 32px;
+  border-radius: 10px;
 `;
 
 const Section = styled.div`
@@ -48,6 +60,21 @@ const Section = styled.div`
 const openNewTab = (event: React.MouseEvent, link: string) => {
   event.preventDefault();
   window.open(link, "_blank", "noopener");
+};
+
+const EventCard = ({ event }: { event: EventData }) => {
+  const date = new Date(event.datetime);
+  const time = date.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return (
+    <EventCardStyled>
+      <h3>{`${date.toLocaleDateString()} at ${time}`}</h3>
+      <p>{event.name}</p>
+      <p>{`${event.volunteers.length} volunteer${event.volunteers.length !== 1 ? 's' : ''}`}</p>
+    </EventCardStyled>
+  );
 };
 
 type HomePageProps = {
@@ -69,7 +96,7 @@ export default function Home({ events }: HomePageProps): JSX.Element {
 
       <Section>
         <h2>Upcoming Events</h2>
-        <Grid>
+        <EventList>
           {events.map((event) => (
             <Link
               key={event.id}
@@ -77,17 +104,12 @@ export default function Home({ events }: HomePageProps): JSX.Element {
               as={`/event/${event.id}`}
               passHref
             >
-              <BaseLink>
-                <Card title={new Date(event.datetime).toLocaleDateString()}>
-                  <p>{event.name}</p>
-                  <p>{`${event.volunteers.length} ${
-                    event.volunteers.length === 1 ? "volunteer" : "volunteers"
-                  }`}</p>
-                </Card>
-              </BaseLink>
+              <LinkWrapper>
+                <EventCard event={event} />
+              </LinkWrapper>
             </Link>
           ))}
-        </Grid>
+        </EventList>
       </Section>
     </Layout>
   );
