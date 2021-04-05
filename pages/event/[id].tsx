@@ -11,7 +11,7 @@ import styled from "styled-components";
 import Card from "../../components/Card";
 import Layout from "../../components/Layout";
 import EventData from "../../lib/types/Event";
-import getTable from "../../lib/utils/getTable";
+import AirtableApi from "../../lib/airtable";
 
 const EventInfo = styled.div`
   display: flex;
@@ -114,7 +114,7 @@ export async function getStaticProps({
 > {
   let event: EventData = null;
   try {
-    const eventRecord = await getTable("Events").find(params.id);
+    const eventRecord = await AirtableApi.readTable("Events").find(params.id);
     event = {
       id: eventRecord.id,
       name: eventRecord.get("Name"),

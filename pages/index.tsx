@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Card from "../components/Card";
 import Layout from "../components/Layout";
 import EventData from "../lib/types/Event";
-import getTable from "../lib/utils/getTable";
+import AirtableApi from "../lib/airtable";
 import { GetStaticPropsResult } from "next";
 
 const VOLUNTEER_SIGN_UP_LINK = "https://airtable.com/shrdNGOki2dxxU6zy";
@@ -120,7 +120,7 @@ export async function getStaticProps(): Promise<
 > {
   let events: EventData[] = [];
   try {
-    const eventRecords = await getTable("Events")
+    const eventRecords = await AirtableApi.readTable("Events")
       .select({
         fields: ["Name", "Datetime", "Name (from Volunteers)"],
         view: "Upcoming Events",
