@@ -12,11 +12,7 @@ const VOLUNTEER_SIGN_UP_LINK = "https://airtable.com/shrdNGOki2dxxU6zy";
 const EventList = styled.div`
   display: flex;
   flex-flow: wrap;
-  justify-content: space-between;
-
-  & > *:not(:last-child) {
-    margin-right: 20px;
-  }
+  gap: 15px;
 
   @media (max-width: 600px) {
     flex-flow: column;
@@ -72,7 +68,9 @@ const EventCard = ({ event }: { event: EventData }) => {
     <EventCardStyled>
       <h3>{`${date.toLocaleDateString()} at ${time}`}</h3>
       <p>{event.name}</p>
-      <p>{`${event.volunteers.length} volunteer${event.volunteers.length !== 1 ? 's' : ''}`}</p>
+      <p>{`${event.volunteers.length} volunteer${
+        event.volunteers.length !== 1 ? "s" : ""
+      }`}</p>
     </EventCardStyled>
   );
 };

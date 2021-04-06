@@ -25,6 +25,7 @@ const Login = (): JSX.Element => {
     try {
       const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY);
       const didToken = await magic.auth.loginWithMagicLink({ email });
+      console.log(didToken);
       const res = await fetch("/api/login", {
         method: "POST",
         headers: {
