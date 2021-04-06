@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GetStaticPropsResult } from "next";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import AirtableApi from "../lib/airtable";
 import useUser from "../lib/hooks/useUser";
-import EventData from "../lib/types/Event";
+import Event from "../lib/types/Event";
+import Volunteer from "../lib/types/Volunteer";
 import styled from "styled-components";
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -18,12 +19,18 @@ const EventList = styled.div`
 `;
 
 const CheckInCard = styled(Card)`
-  display: flex;
   padding: 12px 20px;
-  gap: 10px;
+  & > div[id="row"] {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 
-  & > *[id="name"] {
-    flex: 1;
+    & > div[id="name"] {
+      flex: 1;
+    }
+    & > div[id="datetime"] {
+      flex: 1;
+    }
   }
 `;
 
@@ -32,35 +39,53 @@ const SubmitSection = styled.div`
 `;
 
 type CheckInProps = {
-  events: EventData[];
+  events: Event[];
 };
 
 const CheckIn = ({ events }: CheckInProps): JSX.Element => {
   const [user, isLoading] = useUser({ redirectTo: "/login" });
+  const [volunteerId, setVolunteerId] = useState();
   const [errorMsg, setErrorMsg] = useState("");
-  const [selectedEvents, setSelectedEvents] = useState([]);
   const router = useRouter();
 
-  const handleChange = (selectedId: string, exists: boolean) => {
-    if (exists) {
-      setSelectedEvents((prev) => prev.filter((id) => id !== selectedId));
-    } else {
-      setSelectedEvents((prev) => [...prev, selectedId]);
+  useEffect(() => {
+    if (!user) {
+      return;
     }
-  };
+    fetch(`/api/volunteerId?email=${user.email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((data) => data.json())
+      .then((data) => {
+        if (data?.volunteerId) {
+          console.log(data.volunteerId);
+          setVolunteerId(data.volunteerId);
+        }
+      })
+      .catch(() => {
+        setErrorMsg("Could not retreive volunteer id");
+      });
+  }, [user]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (eventId: string, isCheckedIn: boolean) => {
     if (errorMsg) {
       setErrorMsg("");
     }
 
     try {
-      const res = await fetch("/api/check-in", {
+      const res = await fetch("/api/checkIn", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ selectedEvents }),
+        body: JSON.stringify({
+          eventId,
+          volunteerId,
+          action: isCheckedIn ? "unregister" : "register",
+        }),
       });
       if (res.status === 200) {
         router.reload();
@@ -89,25 +114,24 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
             hour: "2-digit",
             minute: "2-digit",
           });
-          const checked = selectedEvents.indexOf(event.id) >= 0;
+          const isCheckedIn = event.volunteers.find((v) => v === volunteerId);
           return (
             <CheckInCard key={event.id}>
-              <input
-                type="checkbox"
-                checked={checked}
-                onChange={() => handleChange(event.id, checked)}
-              />
-              <div id="name">{event.name}</div>
-              <div>{date.toLocaleDateString()}</div>
-              <div>{time}</div>
+              <div id="row">
+                <div id="name">{event.name}</div>
+                <div id="datetime">{date.toLocaleDateString()}</div>
+                <div id="datetime">{time}</div>
+                <div>
+                  <Button onClick={() => handleSubmit(event.id, isCheckedIn)}>
+                    {isCheckedIn ? "Unregister" : "Register"}
+                  </Button>
+                </div>
+              </div>
+              {errorMsg && <div>{`Error: ${errorMsg}`}</div>}
             </CheckInCard>
           );
         })}
       </EventList>
-      <SubmitSection>
-        <Button onClick={handleSubmit}>Submit</Button>
-        {errorMsg && <p>{errorMsg}</p>}
-      </SubmitSection>
     </Layout>
   );
 };
@@ -115,11 +139,12 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
 export async function getStaticProps(): Promise<
   GetStaticPropsResult<CheckInProps>
 > {
-  let events: EventData[] = [];
+  let events: Event[] = [];
+  let volunteers: Volunteer[] = [];
   try {
     const eventRecords = await AirtableApi.readTable("Events")
       .select({
-        fields: ["Name", "Datetime", "Name (from Volunteers)"],
+        fields: ["Name", "Datetime", "Volunteers"],
         view: "Upcoming Events",
         sort: [{ field: "Datetime" }],
         maxRecords: 4,
@@ -130,7 +155,7 @@ export async function getStaticProps(): Promise<
       id: record.id,
       name: record.get("Name"),
       datetime: record.get("Datetime"),
-      volunteers: record.get("Name (from Volunteers)") || [],
+      volunteers: record.get("Volunteers") || [],
     }));
   } catch (e) {
     console.error(e);

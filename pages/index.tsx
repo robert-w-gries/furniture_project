@@ -3,7 +3,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import Card from "../components/Card";
 import Layout from "../components/Layout";
-import EventData from "../lib/types/Event";
+import Event from "../lib/types/Event";
 import AirtableApi from "../lib/airtable";
 import { GetStaticPropsResult } from "next";
 
@@ -16,10 +16,6 @@ const EventList = styled.div`
 
   @media (max-width: 600px) {
     flex-flow: column;
-    & > * {
-      margin-right: 0;
-      margin-bottom: 20px;
-    }
   }
 `;
 
@@ -58,7 +54,7 @@ const openNewTab = (event: React.MouseEvent, link: string) => {
   window.open(link, "_blank", "noopener");
 };
 
-const EventCard = ({ event }: { event: EventData }) => {
+const EventCard = ({ event }: { event: Event }) => {
   const date = new Date(event.datetime);
   const time = date.toLocaleTimeString("en-US", {
     hour: "2-digit",
@@ -76,7 +72,7 @@ const EventCard = ({ event }: { event: EventData }) => {
 };
 
 type HomePageProps = {
-  events: EventData[];
+  events: Event[];
 };
 
 export default function Home({ events }: HomePageProps): JSX.Element {
@@ -116,7 +112,7 @@ export default function Home({ events }: HomePageProps): JSX.Element {
 export async function getStaticProps(): Promise<
   GetStaticPropsResult<HomePageProps>
 > {
-  let events: EventData[] = [];
+  let events: Event[] = [];
   try {
     const eventRecords = await AirtableApi.readTable("Events")
       .select({

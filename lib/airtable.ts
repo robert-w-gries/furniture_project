@@ -17,10 +17,10 @@ const isAdmin = (didToken: string) => {
 
 const writeTable = async (
   tableName: string,
-  didToken: string
+  issuer: string
 ): Promise<Table> => {
   // ensure actual user is associated with the call
-  await Magic.users.getMetadataByToken(didToken);
+  await Magic.users.getMetadataByIssuer(issuer);
   return writeBase(tableName);
 };
 

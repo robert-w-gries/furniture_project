@@ -1,6 +1,6 @@
 export type EventStatus = "Past Event" | "In Progress" | "Upcoming Event";
 
-export default interface EventData {
+export default interface Event {
   id: string;
   name?: string;
   datetime?: string;
