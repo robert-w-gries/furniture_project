@@ -34,10 +34,6 @@ const CheckInCard = styled(Card)`
   }
 `;
 
-const SubmitSection = styled.div`
-  margin-top: 20px;
-`;
-
 type CheckInProps = {
   events: Event[];
 };
@@ -98,13 +94,14 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || !user) {
     return (
       <Layout>
         <h1>Loading...</h1>
       </Layout>
     );
   }
+
   return (
     <Layout>
       <EventList>
@@ -114,7 +111,9 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
             hour: "2-digit",
             minute: "2-digit",
           });
-          const isCheckedIn = event.volunteers.find((v) => v === volunteerId);
+          const isCheckedIn = Boolean(
+            event.volunteers.find((v) => v === volunteerId)
+          );
           return (
             <CheckInCard key={event.id}>
               <div id="row">
@@ -122,7 +121,11 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
                 <div id="datetime">{date.toLocaleDateString()}</div>
                 <div id="datetime">{time}</div>
                 <div>
-                  <Button onClick={() => handleSubmit(event.id, isCheckedIn)}>
+                  <Button
+                    color="grey"
+                    onEnter={() => handleSubmit(event.id, isCheckedIn)}
+                    onClick={() => handleSubmit(event.id, isCheckedIn)}
+                  >
                     {isCheckedIn ? "Unregister" : "Register"}
                   </Button>
                 </div>
@@ -167,6 +170,6 @@ export async function getStaticProps(): Promise<
     },
     revalidate: 1,
   };
-};
+}
 
 export default CheckIn;

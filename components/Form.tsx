@@ -21,7 +21,12 @@ const Form = ({ onSubmit, label, submitText }: FormProps): JSX.Element => {
   const [value, setValue] = useState("");
 
   return (
-    <FormFlex>
+    <FormFlex
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit(value);
+      }}
+    >
       <label>
         {label ? `${label}` : null}
         <div>
@@ -33,7 +38,12 @@ const Form = ({ onSubmit, label, submitText }: FormProps): JSX.Element => {
         </div>
       </label>
       <div>
-        <Button onClick={() => onSubmit(value)} preventDefault>
+        <Button
+          color="grey"
+          onClick={() => onSubmit(value)}
+          onEnter={() => onSubmit(value)}
+          preventDefault
+        >
           {submitText || "Submit"}
         </Button>
       </div>
