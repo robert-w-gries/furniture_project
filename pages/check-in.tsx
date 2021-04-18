@@ -57,7 +57,6 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
       .then((data) => data.json())
       .then((data) => {
         if (data?.volunteerId) {
-          console.log(data.volunteerId);
           setVolunteerId(data.volunteerId);
         }
       })
