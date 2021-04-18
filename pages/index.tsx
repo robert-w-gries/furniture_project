@@ -3,7 +3,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import Card from "../components/Card";
 import Layout from "../components/Layout";
-import EventData from "../lib/types/Event";
+import Event from "../lib/types/Event";
 import AirtableApi from "../lib/airtable";
 import { GetStaticPropsResult } from "next";
 
@@ -12,18 +12,10 @@ const VOLUNTEER_SIGN_UP_LINK = "https://airtable.com/shrdNGOki2dxxU6zy";
 const EventList = styled.div`
   display: flex;
   flex-flow: wrap;
-  justify-content: space-between;
-
-  & > *:not(:last-child) {
-    margin-right: 20px;
-  }
+  gap: 15px;
 
   @media (max-width: 600px) {
     flex-flow: column;
-    & > * {
-      margin-right: 0;
-      margin-bottom: 20px;
-    }
   }
 `;
 
@@ -62,7 +54,7 @@ const openNewTab = (event: React.MouseEvent, link: string) => {
   window.open(link, "_blank", "noopener");
 };
 
-const EventCard = ({ event }: { event: EventData }) => {
+const EventCard = ({ event }: { event: Event }) => {
   const date = new Date(event.datetime);
   const time = date.toLocaleTimeString("en-US", {
     hour: "2-digit",
@@ -72,13 +64,15 @@ const EventCard = ({ event }: { event: EventData }) => {
     <EventCardStyled>
       <h3>{`${date.toLocaleDateString()} at ${time}`}</h3>
       <p>{event.name}</p>
-      <p>{`${event.volunteers.length} volunteer${event.volunteers.length !== 1 ? 's' : ''}`}</p>
+      <p>{`${event.volunteers.length} volunteer${
+        event.volunteers.length !== 1 ? "s" : ""
+      }`}</p>
     </EventCardStyled>
   );
 };
 
 type HomePageProps = {
-  events: EventData[];
+  events: Event[];
 };
 
 export default function Home({ events }: HomePageProps): JSX.Element {
@@ -118,7 +112,7 @@ export default function Home({ events }: HomePageProps): JSX.Element {
 export async function getStaticProps(): Promise<
   GetStaticPropsResult<HomePageProps>
 > {
-  let events: EventData[] = [];
+  let events: Event[] = [];
   try {
     const eventRecords = await AirtableApi.readTable("Events")
       .select({

@@ -10,7 +10,7 @@ import { ParsedUrlQuery } from "querystring";
 import styled from "styled-components";
 import Card from "../../components/Card";
 import Layout from "../../components/Layout";
-import EventData from "../../lib/types/Event";
+import Event from "../../lib/types/Event";
 import AirtableApi from "../../lib/airtable";
 
 const EventInfo = styled.div`
@@ -46,10 +46,10 @@ const LabeledElement = ({ children, label }: LabeledElementProps) => (
 );
 
 type EventPageProps = {
-  event: EventData;
+  event: Event;
 };
 
-export default function Event({ event }: EventPageProps): JSX.Element {
+export default function EventPage({ event }: EventPageProps): JSX.Element {
   const router = useRouter();
 
   // If the page is not yet generated, this will be displayed
@@ -112,7 +112,7 @@ export async function getStaticProps({
 }: GetStaticPropsContext<Params>): Promise<
   GetStaticPropsResult<EventPageProps>
 > {
-  let event: EventData = null;
+  let event: Event = null;
   try {
     const eventRecord = await AirtableApi.readTable("Events").find(params.id);
     event = {
