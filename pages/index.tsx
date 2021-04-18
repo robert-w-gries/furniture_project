@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import styled from "styled-components";
 import Card from "../components/Card";
 import Layout from "../components/Layout";
 import Event from "../lib/types/Event";
@@ -9,7 +8,7 @@ import { GetStaticPropsResult } from "next";
 
 const VOLUNTEER_SIGN_UP_LINK = "https://airtable.com/shrdNGOki2dxxU6zy";
 
-const EventList = styled.div`
+/*const EventList = styled.div`
   display: flex;
   flex-flow: wrap;
   gap: 15px;
@@ -47,7 +46,7 @@ const Section = styled.div`
   display: flex;
   flex-flow: column;
   margin-bottom: 2rem;
-`;
+`;*/
 
 const openNewTab = (event: React.MouseEvent, link: string) => {
   event.preventDefault();
@@ -61,15 +60,19 @@ const EventCard = ({ event }: { event: Event }) => {
     minute: "2-digit",
   });
   return (
-    <EventCardStyled>
+    <Card>
       <h3>{`${date.toLocaleDateString()} at ${time}`}</h3>
       <p>{event.name}</p>
       <p>{`${event.volunteers.length} volunteer${
         event.volunteers.length !== 1 ? "s" : ""
       }`}</p>
-    </EventCardStyled>
+    </Card>
   );
 };
+
+const Section = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex flex-col my-4 justify-center">{children}</div>
+);
 
 type HomePageProps = {
   events: Event[];
@@ -79,18 +82,21 @@ export default function Home({ events }: HomePageProps): JSX.Element {
   return (
     <Layout>
       <Section>
-        <h2>Interested in joining the Furniture Project?</h2>
-        <LinkButton
+        <h2 className="text-2xl mb-2">
+          Interested in joining the Furniture Project?
+        </h2>
+        <a
+          className="text-xl w-full text-center border border-black py-2"
           href={VOLUNTEER_SIGN_UP_LINK}
           onClick={(e) => openNewTab(e, VOLUNTEER_SIGN_UP_LINK)}
         >
           Sign Up Now
-        </LinkButton>
+        </a>
       </Section>
 
       <Section>
         <h2>Upcoming Events</h2>
-        <EventList>
+        <div className="flex flex-wrap gap-2 sm:flex-col">
           {events.map((event) => (
             <Link
               key={event.id}
@@ -98,12 +104,12 @@ export default function Home({ events }: HomePageProps): JSX.Element {
               as={`/event/${event.id}`}
               passHref
             >
-              <LinkWrapper>
+              <a href="placeholder">
                 <EventCard event={event} />
-              </LinkWrapper>
+              </a>
             </Link>
           ))}
-        </EventList>
+        </div>
       </Section>
     </Layout>
   );

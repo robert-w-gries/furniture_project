@@ -7,13 +7,12 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/dist/client/router";
 import { ParsedUrlQuery } from "querystring";
-import styled from "styled-components";
 import Card from "../../components/Card";
 import Layout from "../../components/Layout";
 import Event from "../../lib/types/Event";
 import AirtableApi from "../../lib/airtable";
 
-const EventInfo = styled.div`
+/*const EventInfo = styled.div`
   display: flex;
 `;
 
@@ -31,7 +30,7 @@ const EventDetailsCard = styled(Card)`
   margin: 0;
   margin-right: 12px;
   padding: 4rem 8rem;
-`;
+`;*/
 
 type LabeledElementProps = {
   children?: React.ReactNode;

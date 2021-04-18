@@ -6,11 +6,10 @@ import AirtableApi from "../lib/airtable";
 import useUser from "../lib/hooks/useUser";
 import Event from "../lib/types/Event";
 import Volunteer from "../lib/types/Volunteer";
-import styled from "styled-components";
 import Card from "../components/Card";
 import Button from "../components/Button";
 
-const EventList = styled.div`
+/*const EventList = styled.div`
   display: flex;
   flex-flow: column;
   gap: 20px;
@@ -32,7 +31,7 @@ const CheckInCard = styled(Card)`
       flex: 1;
     }
   }
-`;
+`;*/
 
 type CheckInProps = {
   events: Event[];

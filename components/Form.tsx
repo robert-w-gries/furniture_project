@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import Button from "../components/Button";
 
-const FormFlex = styled.form`
+/*const FormFlex = styled.form`
   display: flex;
   flex-flow: column;
   align-items: center;
   & div {
     margin-bottom: 12px;
   }
-`;
+`;*/
 
 type FormProps = {
   onSubmit: (value: string) => void;

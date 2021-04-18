@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import styled from "styled-components";
 
 interface ButtonProps {
   children: ReactNode;
@@ -11,11 +10,11 @@ interface ButtonProps {
   type?: "button" | "reset" | "submit";
 }
 
-const ButtonStyled = styled.button`
+/*const ButtonStyled = styled.button`
   color: ${(props) => props.color};
   background-color: ${(props) => props["background-color"]};
   font-size: 16px;
-`;
+`;*/
 
 const colorMap = {
   blue: {

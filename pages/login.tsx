@@ -1,16 +1,15 @@
 import { Magic } from "magic-sdk";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import styled from "styled-components";
 import Card from "../components/Card";
 import Form from "../components/Form";
 import Layout from "../components/Layout";
 import useUser from "../lib/hooks/useUser";
 
-const FlexColumn = styled.div`
+/*const FlexColumn = styled.div`
   display: flex;
   flex-flow: column;
-`;
+`;*/
 
 const Login = (): JSX.Element => {
   useUser({ redirectTo: "/check-in", redirectIfFound: true });
@@ -45,7 +44,7 @@ const Login = (): JSX.Element => {
 
   return (
     <Layout>
-      <Card title="Login">
+      <Card>
         <FlexColumn>
           <Form label="Email" submitText="Login" onSubmit={handleSubmit} />
         </FlexColumn>
