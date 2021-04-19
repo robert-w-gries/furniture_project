@@ -12,7 +12,7 @@ type CardProps = {
 };
 
 const Card = ({ children }: CardProps) => (
-  <div className="border border-black border-radius-1 transition hover:border-blue-400">
+  <div className="p-4 border border-black rounded-md transition hover:border-blue-600">
     {children}
   </div>
 );

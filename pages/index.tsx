@@ -56,7 +56,7 @@ const openNewTab = (event: React.MouseEvent, link: string) => {
 const EventCard = ({ event }: { event: Event }) => {
   const date = new Date(event.datetime);
   const time = date.toLocaleTimeString("en-US", {
-    hour: "2-digit",
+    hour: "numeric",
     minute: "2-digit",
   });
   return (
@@ -70,8 +70,17 @@ const EventCard = ({ event }: { event: Event }) => {
   );
 };
 
-const Section = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex flex-col my-4 justify-center">{children}</div>
+const Section = ({
+  children,
+  title,
+}: {
+  children: React.ReactNode;
+  title: string;
+}) => (
+  <div className="flex flex-col my-4 justify-center">
+    <h2 className="text-2xl text-center select-none mb-2">{title}</h2>
+    {children}
+  </div>
 );
 
 type HomePageProps = {
@@ -81,22 +90,18 @@ type HomePageProps = {
 export default function Home({ events }: HomePageProps): JSX.Element {
   return (
     <Layout>
-      <Section>
-        <h2 className="text-2xl mb-2">
-          Interested in joining the Furniture Project?
-        </h2>
+      <Section title="Interested in joining the Furniture Project?">
         <a
-          className="text-xl w-full text-center border border-black py-2"
+          className="self-center w-3/4 text-lg text-center"
           href={VOLUNTEER_SIGN_UP_LINK}
           onClick={(e) => openNewTab(e, VOLUNTEER_SIGN_UP_LINK)}
         >
-          Sign Up Now
+          <Card>Sign Up Now</Card>
         </a>
       </Section>
 
-      <Section>
-        <h2>Upcoming Events</h2>
-        <div className="flex flex-wrap gap-2 sm:flex-col">
+      <Section title="Upcoming Events">
+        <div className="flex flex-col gap-2 md:flex-row">
           {events.map((event) => (
             <Link
               key={event.id}
