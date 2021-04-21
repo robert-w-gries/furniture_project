@@ -95,44 +95,50 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
   if (isLoading || !user) {
     return (
       <Layout>
-        <h1>Loading...</h1>
+        <div className="flex-1 flex flex-col justify-center items-center">
+          <h1 className="text-2xl">Loading...</h1>
+        </div>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <EventList>
-        {events.map((event) => {
-          const date = new Date(event.datetime);
-          const time = date.toLocaleTimeString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-          const isCheckedIn = Boolean(
-            event.volunteers.find((v) => v === volunteerId)
-          );
-          return (
-            <CheckInCard key={event.id}>
-              <div id="row">
-                <div id="name">{event.name}</div>
-                <div id="datetime">{date.toLocaleDateString()}</div>
-                <div id="datetime">{time}</div>
-                <div>
-                  <Button
-                    color="grey"
-                    onEnter={() => handleSubmit(event.id, isCheckedIn)}
-                    onClick={() => handleSubmit(event.id, isCheckedIn)}
-                  >
-                    {isCheckedIn ? "Unregister" : "Register"}
-                  </Button>
+      <div className="flex-1 flex flex-col justify-center items-center">
+        <div className="w-3/4 p-8 shadow-xl border border-gray-200">
+          <div className="flex flex-col items-center gap-8">
+            {events.map((event) => {
+              const date = new Date(event.datetime);
+              const time = date.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              const isCheckedIn = Boolean(
+                event.volunteers.find((v) => v === volunteerId)
+              );
+              return (
+                <div key={event.id} className="w-full">
+                  <div className="flex items-center gap-4 select-none">
+                    <div className="flex-1">{event.name}</div>
+                    <div className="flex-1">{date.toLocaleDateString()}</div>
+                    <div className="flex-1">{time}</div>
+                    <div>
+                      <Button
+                        color="grey"
+                        onEnter={() => handleSubmit(event.id, isCheckedIn)}
+                        onClick={() => handleSubmit(event.id, isCheckedIn)}
+                      >
+                        {isCheckedIn ? "Unregister" : "Register"}
+                      </Button>
+                    </div>
+                  </div>
+                  {errorMsg && <div>{`Error: ${errorMsg}`}</div>}
                 </div>
-              </div>
-              {errorMsg && <div>{`Error: ${errorMsg}`}</div>}
-            </CheckInCard>
-          );
-        })}
-      </EventList>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </Layout>
   );
 };

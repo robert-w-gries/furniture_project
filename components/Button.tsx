@@ -54,7 +54,8 @@ export default function Button({
     e.key === "Enter" && onEnter();
   };
   return (
-    <ButtonStyled
+    <button
+      className="py-2 px-4 bg-gray-200"
       type={type || "button"}
       onClick={handleClick}
       onKeyPress={handleKeyPress}
@@ -62,6 +63,6 @@ export default function Button({
       disabled={disabled}
     >
       {children}
-    </ButtonStyled>
+    </button>
   );
 }

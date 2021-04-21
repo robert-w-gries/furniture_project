@@ -44,11 +44,11 @@ const Login = (): JSX.Element => {
 
   return (
     <Layout>
-      <Card>
-        <FlexColumn>
+      <div className="flex-1 flex flex-col justify-center items-center">
+        <div className=" p-8 shadow-xl border border-gray-200">
           <Form label="Email" submitText="Login" onSubmit={handleSubmit} />
-        </FlexColumn>
-      </Card>
+        </div>
+      </div>
     </Layout>
   );
 };
