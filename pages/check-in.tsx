@@ -2,36 +2,13 @@ import React, { useEffect, useState } from "react";
 import { GetStaticPropsResult } from "next";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
-import AirtableApi from "../lib/airtable";
+import AirtableApi from "../lib/airtable/api";
 import useUser from "../lib/hooks/useUser";
 import Event from "../lib/types/Event";
-import Volunteer from "../lib/types/Volunteer";
-import Card from "../components/Card";
 import Button from "../components/Button";
-
-/*const EventList = styled.div`
-  display: flex;
-  flex-flow: column;
-  gap: 20px;
-  width: 100%;
-  max-width: 600px;
-`;
-
-const CheckInCard = styled(Card)`
-  padding: 12px 20px;
-  & > div[id="row"] {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    & > div[id="name"] {
-      flex: 1;
-    }
-    & > div[id="datetime"] {
-      flex: 1;
-    }
-  }
-`;*/
+import { VOLUNTEER_SIGN_UP_LINK } from "../lib/airtable/utils";
+import { openNewTab } from "../lib/utils";
+import Card from "../components/Card";
 
 type CheckInProps = {
   events: Event[];
@@ -41,6 +18,7 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
   const [user, isLoading] = useUser({ redirectTo: "/login" });
   const [volunteerId, setVolunteerId] = useState();
   const [errorMsg, setErrorMsg] = useState("");
+  const [invalidUser, setInvalidUser] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -60,7 +38,7 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
         }
       })
       .catch(() => {
-        setErrorMsg("Could not retreive volunteer id");
+        setInvalidUser(true);
       });
   }, [user]);
 
@@ -92,7 +70,25 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
     }
   };
 
-  if (isLoading || !user) {
+  if (invalidUser) {
+    return (
+      <Layout>
+        <div className="flex-1 flex flex-col justify-center items-center">
+          <h1 className="text-3xl font-semibold mb-2">Error</h1>
+          <h2 className="text-2xl mb-10">{`Could not find email: ${user.email}`}</h2>
+          <a
+            className="text-2xl font-semibold"
+            href={VOLUNTEER_SIGN_UP_LINK}
+            onClick={(e) => openNewTab(e, VOLUNTEER_SIGN_UP_LINK)}
+          >
+            <Card>Click here to register</Card>
+          </a>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (isLoading || !user || !volunteerId) {
     return (
       <Layout>
         <div className="flex-1 flex flex-col justify-center items-center">
@@ -147,7 +143,6 @@ export async function getStaticProps(): Promise<
   GetStaticPropsResult<CheckInProps>
 > {
   let events: Event[] = [];
-  let volunteers: Volunteer[] = [];
   try {
     const eventRecords = await AirtableApi.readTable("Events")
       .select({

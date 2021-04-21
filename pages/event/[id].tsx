@@ -8,7 +8,7 @@ import { useRouter } from "next/dist/client/router";
 import { ParsedUrlQuery } from "querystring";
 import Layout from "../../components/Layout";
 import Event from "../../lib/types/Event";
-import AirtableApi from "../../lib/airtable";
+import AirtableApi from "../../lib/airtable/api";
 
 type LabeledElementProps = {
   children?: React.ReactNode;

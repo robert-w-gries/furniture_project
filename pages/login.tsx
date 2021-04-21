@@ -1,15 +1,9 @@
 import { Magic } from "magic-sdk";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import Card from "../components/Card";
 import Form from "../components/Form";
 import Layout from "../components/Layout";
 import useUser from "../lib/hooks/useUser";
-
-/*const FlexColumn = styled.div`
-  display: flex;
-  flex-flow: column;
-`;*/
 
 const Login = (): JSX.Element => {
   useUser({ redirectTo: "/check-in", redirectIfFound: true });

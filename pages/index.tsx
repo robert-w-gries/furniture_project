@@ -3,15 +3,10 @@ import Link from "next/link";
 import Card from "../components/Card";
 import Layout from "../components/Layout";
 import Event from "../lib/types/Event";
-import AirtableApi from "../lib/airtable";
+import AirtableApi from "../lib/airtable/api";
 import { GetStaticPropsResult } from "next";
-
-const VOLUNTEER_SIGN_UP_LINK = "https://airtable.com/shrdNGOki2dxxU6zy";
-
-const openNewTab = (event: React.MouseEvent, link: string) => {
-  event.preventDefault();
-  window.open(link, "_blank", "noopener");
-};
+import { VOLUNTEER_SIGN_UP_LINK } from "../lib/airtable/utils";
+import { openNewTab } from "../lib/utils";
 
 const EventCard = ({ event }: { event: Event }) => {
   const date = new Date(event.datetime);

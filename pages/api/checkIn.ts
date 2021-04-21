@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import AirtableApi from "../../lib/airtable";
-import Magic from "../../lib/auth/magic";
+import AirtableApi from "../../lib/airtable/api";
 import { getUserFromSession } from "../../lib/auth/session";
 
 export default async function checkIn(
