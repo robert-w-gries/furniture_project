@@ -12,7 +12,7 @@ type HeaderLinkProps = {
 const HeaderLink = ({ children, href }: HeaderLinkProps) => {
   return (
     <Link href={href} passHref>
-      <a className="text-xl mr-6" href={href}>
+      <a className="text-xl mr-8" href={href}>
         {children}
       </a>
     </Link>
