@@ -12,7 +12,7 @@ type HeaderLinkProps = {
 const HeaderLink = ({ children, href }: HeaderLinkProps) => {
   return (
     <Link href={href} passHref>
-      <a className="text-lg mr-10" href={href}>
+      <a className="text-xl mr-6" href={href}>
         {children}
       </a>
     </Link>
@@ -30,7 +30,7 @@ const Layout = ({ children }: LayoutProps): JSX.Element => (
       <link rel="icon" href="/favicon.ico" />
     </Head>
 
-    <div className="flex-1 flex flex-col max-w-screen-lg w-full p-4">
+    <div className="flex-1 flex flex-col max-w-screen-lg w-full py-4 px-8">
       <header className="flex">
         <HeaderLink href="/">Home</HeaderLink>
         <HeaderLink href="/check-in">Check-in</HeaderLink>

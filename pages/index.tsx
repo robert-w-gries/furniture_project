@@ -8,46 +8,6 @@ import { GetStaticPropsResult } from "next";
 
 const VOLUNTEER_SIGN_UP_LINK = "https://airtable.com/shrdNGOki2dxxU6zy";
 
-/*const EventList = styled.div`
-  display: flex;
-  flex-flow: wrap;
-  gap: 15px;
-
-  @media (max-width: 600px) {
-    flex-flow: column;
-  }
-`;
-
-const LinkWrapper = styled.a`
-  &:hover,
-  &:focus,
-  &:active {
-    color: #0070f3;
-    border-color: #0070f3;
-    cursor: pointer;
-  }
-`;
-
-const LinkButton = styled(LinkWrapper)`
-  font-size: 1.25rem;
-  border: 1px solid black;
-  padding: 14px 24px;
-  border-radius: 5px;
-  text-align: center;
-`;
-
-const EventCardStyled = styled(Card)`
-  width: 200px;
-  padding: 20px 32px;
-  border-radius: 10px;
-`;
-
-const Section = styled.div`
-  display: flex;
-  flex-flow: column;
-  margin-bottom: 2rem;
-`;*/
-
 const openNewTab = (event: React.MouseEvent, link: string) => {
   event.preventDefault();
   window.open(link, "_blank", "noopener");
@@ -77,8 +37,8 @@ const Section = ({
   children: React.ReactNode;
   title: string;
 }) => (
-  <div className="flex flex-col my-4 justify-center">
-    <h2 className="text-2xl text-center select-none mb-2">{title}</h2>
+  <div className="flex flex-col my-8 justify-center">
+    <h2 className="text-2xl text-center select-none mb-4">{title}</h2>
     {children}
   </div>
 );
@@ -92,7 +52,7 @@ export default function Home({ events }: HomePageProps): JSX.Element {
     <Layout>
       <Section title="Interested in joining the Furniture Project?">
         <a
-          className="self-center w-3/4 text-lg text-center"
+          className="self-center w-full text-lg"
           href={VOLUNTEER_SIGN_UP_LINK}
           onClick={(e) => openNewTab(e, VOLUNTEER_SIGN_UP_LINK)}
         >
