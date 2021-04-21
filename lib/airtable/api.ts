@@ -1,6 +1,6 @@
 import Airtable from "airtable";
 import Table from "airtable/lib/table";
-import Magic from "./auth/magic";
+import Magic from "../auth/magic";
 
 const readBase = new Airtable({
   apiKey: process.env.AIRTABLE_READ_KEY,

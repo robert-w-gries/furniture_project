@@ -1,37 +1,14 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   GetStaticPathsResult,
   GetStaticPropsContext,
   GetStaticPropsResult,
 } from "next";
-import Image from "next/image";
 import { useRouter } from "next/dist/client/router";
 import { ParsedUrlQuery } from "querystring";
-import styled from "styled-components";
-import Card from "../../components/Card";
 import Layout from "../../components/Layout";
 import Event from "../../lib/types/Event";
-import AirtableApi from "../../lib/airtable";
-
-const EventInfo = styled.div`
-  display: flex;
-`;
-
-const Label = styled.div`
-  font-weight: 600;
-  font-size: 16px;
-  margin-bottom: 4px;
-`;
-
-const InfoSection = styled.div`
-  margin-bottom: 14px;
-`;
-
-const EventDetailsCard = styled(Card)`
-  margin: 0;
-  margin-right: 12px;
-  padding: 4rem 8rem;
-`;
+import AirtableApi from "../../lib/airtable/api";
 
 type LabeledElementProps = {
   children?: React.ReactNode;
@@ -39,10 +16,10 @@ type LabeledElementProps = {
 };
 
 const LabeledElement = ({ children, label }: LabeledElementProps) => (
-  <InfoSection>
-    <Label>{label}</Label>
-    <div>{children}</div>
-  </InfoSection>
+  <div className="flex w-full my-4">
+    <h2 className="flex-1 w-1/3 font-semibold text-lg">{label}</h2>
+    <div className="flex-1">{children}</div>
+  </div>
 );
 
 type EventPageProps = {
@@ -74,9 +51,9 @@ export default function EventPage({ event }: EventPageProps): JSX.Element {
   const date = new Date(event.datetime);
   return (
     <Layout>
-      <EventInfo>
-        <EventDetailsCard>
-          <h2>{event.name}</h2>
+      <div className="flex-1 flex flex-col justify-center items-center">
+        <div className="flex flex-col items-center w-3/4 p-8 rounded-md shadow-lg border border-gray-200">
+          <h2 className="text-xl mb-4">{event.name}</h2>
           <LabeledElement label="Date">
             {date.toLocaleDateString()}
           </LabeledElement>
@@ -91,14 +68,8 @@ export default function EventPage({ event }: EventPageProps): JSX.Element {
               <div key={volunteer}>{volunteer}</div>
             ))}
           </LabeledElement>
-        </EventDetailsCard>
-        <Image
-          src="/meetup_location.png"
-          alt="Coordinates: 36.0199722,-78.9075955"
-          width={720}
-          height={600}
-        />
-      </EventInfo>
+        </div>
+      </div>
     </Layout>
   );
 }

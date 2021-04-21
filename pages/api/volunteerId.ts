@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import AirtableApi from "../../lib/airtable";
+import AirtableApi from "../../lib/airtable/api";
 
 export default async function checkIn(
   req: NextApiRequest,

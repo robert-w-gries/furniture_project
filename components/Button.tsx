@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import styled from "styled-components";
 
 interface ButtonProps {
   children: ReactNode;
@@ -10,12 +9,6 @@ interface ButtonProps {
   preventDefault?: boolean;
   type?: "button" | "reset" | "submit";
 }
-
-const ButtonStyled = styled.button`
-  color: ${(props) => props.color};
-  background-color: ${(props) => props["background-color"]};
-  font-size: 16px;
-`;
 
 const colorMap = {
   blue: {
@@ -55,7 +48,8 @@ export default function Button({
     e.key === "Enter" && onEnter();
   };
   return (
-    <ButtonStyled
+    <button
+      className="py-2 px-4 bg-gray-200"
       type={type || "button"}
       onClick={handleClick}
       onKeyPress={handleKeyPress}
@@ -63,6 +57,6 @@ export default function Button({
       disabled={disabled}
     >
       {children}
-    </ButtonStyled>
+    </button>
   );
 }

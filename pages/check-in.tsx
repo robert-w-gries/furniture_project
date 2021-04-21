@@ -2,37 +2,13 @@ import React, { useEffect, useState } from "react";
 import { GetStaticPropsResult } from "next";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
-import AirtableApi from "../lib/airtable";
+import AirtableApi from "../lib/airtable/api";
 import useUser from "../lib/hooks/useUser";
 import Event from "../lib/types/Event";
-import Volunteer from "../lib/types/Volunteer";
-import styled from "styled-components";
-import Card from "../components/Card";
 import Button from "../components/Button";
-
-const EventList = styled.div`
-  display: flex;
-  flex-flow: column;
-  gap: 20px;
-  width: 100%;
-  max-width: 600px;
-`;
-
-const CheckInCard = styled(Card)`
-  padding: 12px 20px;
-  & > div[id="row"] {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    & > div[id="name"] {
-      flex: 1;
-    }
-    & > div[id="datetime"] {
-      flex: 1;
-    }
-  }
-`;
+import { VOLUNTEER_SIGN_UP_LINK } from "../lib/airtable/utils";
+import { openNewTab } from "../lib/utils";
+import Card from "../components/Card";
 
 type CheckInProps = {
   events: Event[];
@@ -42,6 +18,7 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
   const [user, isLoading] = useUser({ redirectTo: "/login" });
   const [volunteerId, setVolunteerId] = useState();
   const [errorMsg, setErrorMsg] = useState("");
+  const [invalidUser, setInvalidUser] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -61,7 +38,7 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
         }
       })
       .catch(() => {
-        setErrorMsg("Could not retreive volunteer id");
+        setInvalidUser(true);
       });
   }, [user]);
 
@@ -93,47 +70,71 @@ const CheckIn = ({ events }: CheckInProps): JSX.Element => {
     }
   };
 
-  if (isLoading || !user) {
+  if (invalidUser) {
     return (
       <Layout>
-        <h1>Loading...</h1>
+        <div className="flex-1 flex flex-col justify-center items-center">
+          <h1 className="text-3xl font-semibold mb-2">Error</h1>
+          <h2 className="text-2xl mb-10">{`Could not find email: ${user.email}`}</h2>
+          <a
+            className="text-2xl font-semibold"
+            href={VOLUNTEER_SIGN_UP_LINK}
+            onClick={(e) => openNewTab(e, VOLUNTEER_SIGN_UP_LINK)}
+          >
+            <Card>Click here to register</Card>
+          </a>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (isLoading || !user || !volunteerId) {
+    return (
+      <Layout>
+        <div className="flex-1 flex flex-col justify-center items-center">
+          <h1 className="text-2xl">Loading...</h1>
+        </div>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <EventList>
-        {events.map((event) => {
-          const date = new Date(event.datetime);
-          const time = date.toLocaleTimeString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-          const isCheckedIn = Boolean(
-            event.volunteers.find((v) => v === volunteerId)
-          );
-          return (
-            <CheckInCard key={event.id}>
-              <div id="row">
-                <div id="name">{event.name}</div>
-                <div id="datetime">{date.toLocaleDateString()}</div>
-                <div id="datetime">{time}</div>
-                <div>
-                  <Button
-                    color="grey"
-                    onEnter={() => handleSubmit(event.id, isCheckedIn)}
-                    onClick={() => handleSubmit(event.id, isCheckedIn)}
-                  >
-                    {isCheckedIn ? "Unregister" : "Register"}
-                  </Button>
+      <div className="flex-1 flex flex-col justify-center items-center">
+        <div className="w-3/4 p-8 shadow-xl border border-gray-200">
+          <div className="flex flex-col items-center gap-8">
+            {events.map((event) => {
+              const date = new Date(event.datetime);
+              const time = date.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              const isCheckedIn = Boolean(
+                event.volunteers.find((v) => v === volunteerId)
+              );
+              return (
+                <div key={event.id} className="w-full">
+                  <div className="flex items-center gap-4 select-none">
+                    <div className="flex-1">{event.name}</div>
+                    <div className="flex-1">{date.toLocaleDateString()}</div>
+                    <div className="flex-1">{time}</div>
+                    <div>
+                      <Button
+                        color="grey"
+                        onEnter={() => handleSubmit(event.id, isCheckedIn)}
+                        onClick={() => handleSubmit(event.id, isCheckedIn)}
+                      >
+                        {isCheckedIn ? "Unregister" : "Register"}
+                      </Button>
+                    </div>
+                  </div>
+                  {errorMsg && <div>{`Error: ${errorMsg}`}</div>}
                 </div>
-              </div>
-              {errorMsg && <div>{`Error: ${errorMsg}`}</div>}
-            </CheckInCard>
-          );
-        })}
-      </EventList>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </Layout>
   );
 };
@@ -142,7 +143,6 @@ export async function getStaticProps(): Promise<
   GetStaticPropsResult<CheckInProps>
 > {
   let events: Event[] = [];
-  let volunteers: Volunteer[] = [];
   try {
     const eventRecords = await AirtableApi.readTable("Events")
       .select({
