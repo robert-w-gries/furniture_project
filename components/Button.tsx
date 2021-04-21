@@ -10,12 +10,6 @@ interface ButtonProps {
   type?: "button" | "reset" | "submit";
 }
 
-/*const ButtonStyled = styled.button`
-  color: ${(props) => props.color};
-  background-color: ${(props) => props["background-color"]};
-  font-size: 16px;
-`;*/
-
 const colorMap = {
   blue: {
     color: "white",
